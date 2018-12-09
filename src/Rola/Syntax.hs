@@ -19,12 +19,8 @@ data Expr = Var Name
           | Literal Lit
           deriving (Eq, Show)
 
--- λ
 instance Pretty Expr where
   prettify (Var var) = var
   prettify (Abs head body) = "(λ" ++ head ++ "." ++ prettify body ++ ")"
   prettify (App expr expr') = prettify expr ++ " " ++ prettify expr'
   prettify (Literal lit) = prettify lit
-
-i = Abs "x" (Var "x")
-id' = App i (Literal (LInt 3))
