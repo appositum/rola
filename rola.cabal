@@ -1,0 +1,60 @@
+name:           rola
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/appositum/rola#readme>
+homepage:       https://github.com/appositum/rola#readme
+bug-reports:    https://github.com/appositum/rola/issues
+author:         appositum
+maintainer:     appositum@protonmail.com
+copyright:      2018 appositum
+license:        Apache-2.0
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/appositum/rola
+
+library
+  exposed-modules:
+      Rola
+      Rola.Parser
+      Rola.Pretty
+      Rola.Syntax
+  other-modules:
+      Paths_rola
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , megaparsec
+  default-language: Haskell2010
+
+executable rola-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_rola
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , rola
+    , megaparsec
+  default-language: Haskell2010
+
+test-suite rola-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_rola
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , rola
+  default-language: Haskell2010
