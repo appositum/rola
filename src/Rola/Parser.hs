@@ -11,6 +11,9 @@ type Parser = Parsec Void String
 symbolic :: Char -> Parser Char
 symbolic c = space *> char c <* space
 
+parens :: Parser a -> Parser a
+parens = between (symbolic '(') (symbolic ')')
+
 identifier :: Parser String
 identifier = do
   x <- letterChar
@@ -32,14 +35,22 @@ parseVar :: Parser Expr
 parseVar = Var <$> identifier
 
 parseAbs :: Parser Expr
-parseAbs = do
+parseAbs = parens $ do
   symbolic 'λ' <|> symbolic '\\'
   arg <- identifier
   symbolic '.'
   body <- parseExpr
   pure (Abs arg body)
 
+parseApp :: Parser Expr
+parseApp = do
+  abs <- parseAbs
+  expr <- parseExpr
+  pure (App abs expr)
+
 parseExpr :: Parser Expr
-parseExpr =  parseAbs
-         <|> parseBool
-         <|> parseVar
+parseExpr = try (parseApp <?> "lambda application")
+         <|> (parseAbs <?> "lambda abstraction")
+         <|> (parseInt <?> "number")
+         <|> (parseBool <?> "bool")
+         <|> (parseVar <?> "identifier")
