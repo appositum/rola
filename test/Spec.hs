@@ -11,26 +11,26 @@ main = hspec $ do
     it "can parse lambda function" $ do
       let res = parse "\\x.x"
       let res' = parse "λx.x"
-      res `shouldBe` Just (Abs "x" (Var "x"))
-      res' `shouldBe` Just (Abs "x" (Var "x"))
+      res `shouldBe` Just (Abs (Var "x") (Var "x"))
+      res' `shouldBe` Just (Abs (Var "x") (Var "x"))
 
     it "can parse function surrounded by parenthesis" $ do
       let res = parse "(\\x.x)"
       let res' = parse "(λx.x)"
-      res `shouldBe` Just (Abs "x" (Var "x"))
-      res' `shouldBe` Just (Abs "x" (Var "x"))
+      res `shouldBe` Just (Abs (Var "x") (Var "x"))
+      res' `shouldBe` Just (Abs (Var "x") (Var "x"))
 
     it "can parse curried functions" $ do
       let res = parse "(\\x.\\y.x)"
       let res' = parse "(λx.λy.x)"
-      res `shouldBe` Just (Abs "x" (Abs "y" (Var "x")))
-      res' `shouldBe` Just (Abs "x" (Abs "y" (Var "x")))
+      res `shouldBe` Just (Abs (Var "x") (Abs (Var "y") (Var "x")))
+      res' `shouldBe` Just (Abs (Var "x") (Abs (Var "y") (Var "x")))
 
     it "can parse curried functions 2" $ do
       let res = parse "(\\x.\\y.\\z.z)"
       let res' = parse "(λx.λy.λz.z)"
-      res `shouldBe` Just (Abs "x" (Abs "y" (Abs "z" (Var "z"))))
-      res' `shouldBe` Just (Abs "x" (Abs "y" (Abs "z" (Var "z"))))
+      let expec = Just $ Abs (Var "x") (Abs (Var "y") (Abs (Var "z") (Var "z")))
+      res' `shouldBe` expec
 
   describe "Literals" $ do
     it "can parse bool literals" $ do
@@ -40,5 +40,7 @@ main = hspec $ do
     it "can parse booleans inside functions" $ do
       let res = parse "(\\x.\\y.false)"
       let res' = parse "(\\v.\\w.true)"
-      res `shouldBe` Just (Abs "x" (Abs "y" (Literal (LBool False))))
-      res' `shouldBe` Just (Abs "v" (Abs "w" (Literal (LBool True))))
+      let expec = Abs (Var "x") (Abs (Var "y") (Literal (LBool False)))
+      let expec' = Abs (Var "v") (Abs (Var "w") (Literal (LBool True)))
+      res `shouldBe` Just expec
+      res' `shouldBe` Just expec'
