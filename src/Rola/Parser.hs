@@ -2,6 +2,7 @@ module Rola.Parser where
 
 import Data.Void (Void)
 import Rola.Syntax
+import Rola.Pretty
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer (decimal)
@@ -54,3 +55,12 @@ parseExpr = try (parseApp <?> "lambda application")
          <|> (parseInt <?> "number")
          <|> (parseBool <?> "bool")
          <|> (parseVar <?> "identifier")
+
+readExpr :: String -> Either (ParseErrorBundle String Void) Expr
+readExpr = parse parseExpr "(input)"
+
+eval :: String -> IO ()
+eval expr =
+  case readExpr expr of
+    Right res -> prettyPrint res
+    Left err -> putStr $ errorBundlePretty err

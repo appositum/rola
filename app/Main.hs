@@ -11,5 +11,5 @@ repl :: IO ()
 repl = do
   input <- putStr "ROLA> " >> hFlush stdout >> getLine
   unless (input == ":q" || input == ":quit") $ do
-    putStrLn input
+    eval input
     repl
