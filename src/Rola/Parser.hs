@@ -39,17 +39,17 @@ parseVar = Var <$> identifier
 parseAbs :: Parser Expr
 parseAbs = do
   symbolic 'λ' <|> symbolic '\\'
-  arg <- some identifier
+  args <- some identifier
   symbolic '.'
   body <- parseExpr
-  pure (foldr Abs body arg)
+  pure (foldr Abs body args)
 
 parseTerm :: Parser Expr
 parseTerm =  (parens parseExpr <?> "expression")
-         <|> (parseAbs <?> "function")
-         <|> (parseInt <?> "number")
          <|> (parseBool <?> "bool")
          <|> (parseVar <?> "identifier")
+         <|> (parseInt <?> "number")
+         <|> (parseAbs <?> "function")
 
 parseExpr :: Parser Expr
 parseExpr = some parseTerm >>= pure . foldl1' App
