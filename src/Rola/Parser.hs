@@ -1,6 +1,7 @@
 module Rola.Parser where
 
 import Data.Void (Void)
+import Data.List (foldl1')
 import Rola.Syntax
 import Rola.Pretty
 import Text.Megaparsec
@@ -38,23 +39,20 @@ parseVar = Var <$> identifier
 parseAbs :: Parser Expr
 parseAbs = do
   symbolic 'λ' <|> symbolic '\\'
-  arg <- identifier
+  arg <- some identifier
   symbolic '.'
   body <- parseExpr
-  pure (Abs arg body)
+  pure (foldr Abs body arg)
 
-parseApp :: Parser Expr
-parseApp = do
-  abs <- parens parseAbs
-  expr <- parseExpr
-  pure (App abs expr)
-
-parseExpr :: Parser Expr
-parseExpr = try (parseApp <?> "lambda application")
-         <|> (parseAbs <?> "lambda abstraction")
+parseTerm :: Parser Expr
+parseTerm =  (parens parseExpr <?> "expression")
+         <|> (parseAbs <?> "function")
          <|> (parseInt <?> "number")
          <|> (parseBool <?> "bool")
          <|> (parseVar <?> "identifier")
+
+parseExpr :: Parser Expr
+parseExpr = some parseTerm >>= pure . foldl1' App
 
 readExpr :: String -> Either (ParseErrorBundle String Void) Expr
 readExpr = parse parseExpr "(input)"
