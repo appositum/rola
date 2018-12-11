@@ -13,7 +13,7 @@ symbolic c = space *> char c <* space
 
 identifier :: Parser String
 identifier = do
-  x <- letterChar <|> char '_'
+  x <- letterChar
   xs <- many alphaNumChar
   pure (x:xs)
 
