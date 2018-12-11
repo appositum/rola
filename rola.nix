@@ -6,7 +6,7 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [ base megaparsec_7_0_4 ];
-  executableHaskellDepends = [ base megaparsec_7_0_4 ];
+  executableHaskellDepends = [ base ];
   testHaskellDepends = [ base hspec megaparsec_7_0_4 ];
   doHaddock = false;
   homepage = "https://github.com/appositum/rola#readme";
