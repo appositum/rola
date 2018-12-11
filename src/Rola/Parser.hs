@@ -42,7 +42,7 @@ abstraction = do
   head <- variable
   symbolic '.'
   body <- parseExpr
-  pure (Abs head body)
+  pure (Lambda head body)
 
 application :: Parser Expr
 application = App <$> abstraction <*> parseExpr
