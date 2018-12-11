@@ -22,34 +22,34 @@ identifier = do
   xs <- many alphaNumChar
   pure (x:xs)
 
-parseInt :: Parser Expr
-parseInt = Literal <$> LInt <$> decimal
+literalInt :: Parser Expr
+literalInt = Literal <$> LInt <$> decimal
 
-parseBool :: Parser Expr
-parseBool = do
+literalBool :: Parser Expr
+literalBool = do
   b <- string "true" <|> string "false"
   pure $
     case b of
       "true"  -> Literal (LBool True)
       "false" -> Literal (LBool False)
 
-parseVar :: Parser Expr
-parseVar = Var <$> identifier
+variable :: Parser Expr
+variable = Var <$> identifier
 
-parseAbs :: Parser Expr
-parseAbs = do
+abstraction :: Parser Expr
+abstraction = do
   symbolic 'λ' <|> symbolic '\\'
-  args <- some identifier
+  head <- variable
   symbolic '.'
   body <- parseExpr
-  pure (foldr Abs body args)
+  pure (Abs head body)
 
 parseTerm :: Parser Expr
 parseTerm =  (parens parseExpr <?> "expression")
-         <|> (parseBool <?> "bool")
-         <|> (parseVar <?> "identifier")
-         <|> (parseInt <?> "number")
-         <|> (parseAbs <?> "function")
+         <|> (abstraction      <?> "function")
+         <|> (literalBool      <?> "boolean")
+         <|> (variable         <?> "identifier")
+         <|> (literalInt       <?> "number")
 
 parseExpr :: Parser Expr
 parseExpr = some parseTerm >>= pure . foldl1' App
