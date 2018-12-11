@@ -44,6 +44,9 @@ abstraction = do
   body <- parseExpr
   pure (Abs head body)
 
+application :: Parser Expr
+application = App <$> abstraction <*> parseExpr
+
 parseTerm :: Parser Expr
 parseTerm =  (parens parseExpr <?> "expression")
          <|> (abstraction      <?> "function")
@@ -52,7 +55,7 @@ parseTerm =  (parens parseExpr <?> "expression")
          <|> (literalInt       <?> "number")
 
 parseExpr :: Parser Expr
-parseExpr = some parseTerm >>= pure . foldl1' App
+parseExpr = foldl1' App <$> parseTerm `sepBy1` space
 
 readExpr :: String -> Either (ParseErrorBundle String Void) Expr
 readExpr = parse parseExpr "(input)"
@@ -60,5 +63,5 @@ readExpr = parse parseExpr "(input)"
 eval :: String -> IO ()
 eval expr =
   case readExpr expr of
-    Right res -> prettyPrint res
+    Right res -> putStrLn $ prettify res ++ "\n  -> " ++ show res
     Left err -> putStr $ errorBundlePretty err
