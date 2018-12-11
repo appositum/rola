@@ -9,11 +9,14 @@ import Text.Megaparsec.Char.Lexer (decimal)
 type Parser = Parsec Void String
 
 symbolic :: Char -> Parser Char
-symbolic c = space *> char c <* space
+symbolic = between space space . char
+
+parens :: Parser a -> Parser a
+parens = between (symbolic '(') (symbolic ')')
 
 identifier :: Parser String
 identifier = do
-  x <- letterChar <|> char '_'
+  x <- letterChar
   xs <- many alphaNumChar
   pure (x:xs)
 
@@ -25,7 +28,7 @@ parseBool = do
   b <- string "true" <|> string "false"
   pure $
     case b of
-      "true" -> Literal (LBool True)
+      "true"  -> Literal (LBool True)
       "false" -> Literal (LBool False)
 
 parseVar :: Parser Expr
@@ -39,7 +42,15 @@ parseAbs = do
   body <- parseExpr
   pure (Abs arg body)
 
+parseApp :: Parser Expr
+parseApp = do
+  abs <- parens parseAbs
+  expr <- parseExpr
+  pure (App abs expr)
+
 parseExpr :: Parser Expr
-parseExpr =  parseAbs
-         <|> parseBool
-         <|> parseVar
+parseExpr = try (parseApp <?> "lambda application")
+         <|> (parseAbs <?> "lambda abstraction")
+         <|> (parseInt <?> "number")
+         <|> (parseBool <?> "bool")
+         <|> (parseVar <?> "identifier")
