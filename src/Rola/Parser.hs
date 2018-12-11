@@ -1,7 +1,9 @@
 module Rola.Parser where
 
 import Data.Void (Void)
+import Data.List (foldl1')
 import Rola.Syntax
+import Rola.Pretty
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer (decimal)
@@ -20,37 +22,46 @@ identifier = do
   xs <- many alphaNumChar
   pure (x:xs)
 
-parseInt :: Parser Expr
-parseInt = Literal <$> LInt <$> decimal
+literalInt :: Parser Expr
+literalInt = Literal <$> LInt <$> decimal
 
-parseBool :: Parser Expr
-parseBool = do
+literalBool :: Parser Expr
+literalBool = do
   b <- string "true" <|> string "false"
   pure $
     case b of
       "true"  -> Literal (LBool True)
       "false" -> Literal (LBool False)
 
-parseVar :: Parser Expr
-parseVar = Var <$> identifier
+variable :: Parser Expr
+variable = Var <$> identifier
 
-parseAbs :: Parser Expr
-parseAbs = do
+abstraction :: Parser Expr
+abstraction = do
   symbolic 'λ' <|> symbolic '\\'
-  arg <- identifier
+  head <- variable
   symbolic '.'
   body <- parseExpr
-  pure (Abs arg body)
+  pure (Abs head body)
 
-parseApp :: Parser Expr
-parseApp = do
-  abs <- parens parseAbs
-  expr <- parseExpr
-  pure (App abs expr)
+application :: Parser Expr
+application = App <$> abstraction <*> parseExpr
+
+parseTerm :: Parser Expr
+parseTerm =  (parens parseExpr <?> "expression")
+         <|> (abstraction      <?> "function")
+         <|> (literalBool      <?> "boolean")
+         <|> (variable         <?> "identifier")
+         <|> (literalInt       <?> "number")
 
 parseExpr :: Parser Expr
-parseExpr = try (parseApp <?> "lambda application")
-         <|> (parseAbs <?> "lambda abstraction")
-         <|> (parseInt <?> "number")
-         <|> (parseBool <?> "bool")
-         <|> (parseVar <?> "identifier")
+parseExpr = foldl1' App <$> parseTerm `sepBy1` space
+
+readExpr :: String -> Either (ParseErrorBundle String Void) Expr
+readExpr = parse parseExpr "(input)"
+
+eval :: String -> IO ()
+eval expr =
+  case readExpr expr of
+    Right res -> putStrLn $ prettify res ++ "\n  -> " ++ show res
+    Left err -> putStr $ errorBundlePretty err
