@@ -9,7 +9,7 @@ import Text.Megaparsec.Char.Lexer (decimal)
 type Parser = Parsec Void String
 
 symbolic :: Char -> Parser Char
-symbolic c = space *> char c <* space
+symbolic = between space space . char
 
 parens :: Parser a -> Parser a
 parens = between (symbolic '(') (symbolic ')')
@@ -28,14 +28,14 @@ parseBool = do
   b <- string "true" <|> string "false"
   pure $
     case b of
-      "true" -> Literal (LBool True)
+      "true"  -> Literal (LBool True)
       "false" -> Literal (LBool False)
 
 parseVar :: Parser Expr
 parseVar = Var <$> identifier
 
 parseAbs :: Parser Expr
-parseAbs = parens $ do
+parseAbs = do
   symbolic 'λ' <|> symbolic '\\'
   arg <- identifier
   symbolic '.'
@@ -44,7 +44,7 @@ parseAbs = parens $ do
 
 parseApp :: Parser Expr
 parseApp = do
-  abs <- parseAbs
+  abs <- parens parseAbs
   expr <- parseExpr
   pure (App abs expr)
 
