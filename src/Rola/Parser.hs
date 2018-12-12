@@ -61,7 +61,7 @@ parseTerm =  (parens parseExpr <?> "expression")
          <|> (literalInt       <?> "number")
 
 parseExpr :: Parser Expr
-parseExpr = foldl1' App <$> parseTerm `sepBy1` space
+parseExpr = foldl1' App <$> (parseTerm <?> "term") `sepBy1` space
 
 readExpr :: String -> Either (ParseErrorBundle String Void) Expr
 readExpr = parse parseExpr "(input)"
