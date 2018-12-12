@@ -1,7 +1,7 @@
 # Rola
 [![Build Status](https://travis-ci.com/appositum/rola.svg?branch=master)](https://travis-ci.com/appositum/rola)
 <br>
-Really Outstanding LAmbda interpreter
+<b>R</b>eally <b>O</b>utstanding <b>LA</b>mbda interpreter
 
 ### A few ways to build this
 - **Nix**
