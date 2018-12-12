@@ -17,7 +17,7 @@ instance Pretty Lit where
 type Name = String
 
 data Expr = Var Name
-          | Lam Name Expr -- abstraction
+          | Lam Name Expr -- λ abstraction
           | App Expr Expr -- application
           | Literal Lit
           deriving (Eq, Show)

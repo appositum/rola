@@ -1,4 +1,3 @@
 #!/bin/sh
 
-nix-build
-./result/bin/rola-exe
+nix-build && ./result/bin/rola-exe
