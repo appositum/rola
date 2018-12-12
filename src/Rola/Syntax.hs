@@ -1,4 +1,7 @@
-module Rola.Syntax where
+module Rola.Syntax
+  ( Expr(..)
+  , Lit(..)
+  ) where
 
 import Rola.Pretty
 
@@ -14,7 +17,7 @@ instance Pretty Lit where
 type Name = String
 
 data Expr = Var Name
-          | Abs Expr Expr -- abstraction
+          | Lam Name Expr -- abstraction
           | App Expr Expr -- application
           | Literal Lit
           deriving (Eq, Show)
@@ -22,5 +25,5 @@ data Expr = Var Name
 instance Pretty Expr where
   prettify (Var var) = var
   prettify (Literal lit) = prettify lit
-  prettify (Abs head body) = "(λ" ++ prettify head ++ "." ++ prettify body ++ ")"
+  prettify (Lam head body) = "(λ" ++ head ++ "." ++ prettify body ++ ")"
   prettify (App func expr) =  "(" ++ prettify func ++ " " ++ prettify expr ++ ")"
