@@ -33,6 +33,7 @@ main = hspec $ do
       let res = parse "(\\x.\\y.\\z.z)"
       let res' = parse "(λx.λy.λz.z)"
       let expec = Just $ Lam "x" (Lam "y" (Lam "z" (Var "z")))
+      res `shouldBe` expec
       res' `shouldBe` expec
 
   describe "Literals" $ do
