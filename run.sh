@@ -1,3 +1,4 @@
 #!/bin/sh
 
-nix-shell --run "cabal v1-run exe:rola"
+nix-build
+./result/bin/rola-exe
