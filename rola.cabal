@@ -20,6 +20,7 @@ source-repository head
 
 library
   exposed-modules:
+      Church
       Rola
       Rola.Parser
       Rola.Pretty
