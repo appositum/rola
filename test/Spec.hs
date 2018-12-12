@@ -1,9 +1,19 @@
+{-# LANGUAGE ViewPatterns #-}
+
+import qualified Data.Map as M
 import Rola
 import Test.Hspec
 import Text.Megaparsec (parseMaybe)
 
 parse :: String -> Maybe Expr
 parse = parseMaybe parseExpr
+
+readExpr' :: String -> Expr
+readExpr' (readExpr -> Right res) = res
+
+reduceMaybe :: String -> Maybe Expr
+reduceMaybe (reduce . readExpr' -> Right res) = Just res
+reduceMaybe _ = Nothing
 
 main :: IO ()
 main = hspec $ do
@@ -48,3 +58,26 @@ main = hspec $ do
       let expec' = Lam "v" (Lam "w" (Literal (LBool True)))
       res `shouldBe` Just expec
       res' `shouldBe` Just expec'
+
+  describe "Lambda application" $ do
+    let true = "(λx.λy.x)"
+    let false = "(λx.λy.y)"
+    let ifte = "(λcond.λt.λe. cond t e)"
+
+    it "identity function" $ do
+      reduceMaybe "(\\x.x) 3" `shouldBe` Just (Literal (LInt 3))
+
+    it "fails on undefined variable" $ do
+      reduceMaybe "(λx.y) 3" `shouldBe` Nothing
+
+    it "ifThenElse combinator" $ do
+      let res = unwords [ifte, true, "3 5"]
+      let res' = unwords [ifte, false, "3 5"]
+      reduceMaybe res `shouldBe` Just (Literal (LInt 3))
+      reduceMaybe res'  `shouldBe` Just (Literal (LInt 5))
+
+    it "ifThenElse return functions" $ do
+      let res = unwords [ifte, true, "(\\f.\\g.f) (\\v.\\w.w)"]
+      let res' = unwords [ifte, false, "(\\f.\\g.f) (\\v.\\w.w)"]
+      reduceMaybe res `shouldBe` Just (Cls "f" (Lam "g" (Var "f")) M.empty)
+      reduceMaybe res' `shouldBe` Just (Cls "v" (Lam "w" (Var "w")) M.empty)
