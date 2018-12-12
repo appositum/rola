@@ -1,9 +1,15 @@
-module Rola.Parser where
+module Rola.Parser
+  ( parseExpr
+  , readExpr
+  , Parser(..)
+  ) where
 
-import Data.Void (Void)
 import Data.List (foldl1')
-import Rola.Syntax
-import Rola.Pretty
+import Data.Void (Void)
+
+import Rola.Pretty (prettify)
+import Rola.Syntax (Expr(..), Lit(..))
+
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer (decimal)
@@ -39,10 +45,10 @@ variable = Var <$> identifier
 abstraction :: Parser Expr
 abstraction = do
   symbolic 'λ' <|> symbolic '\\'
-  head <- variable
+  arg <- identifier
   symbolic '.'
-  body <- parseExpr
-  pure (Abs head body)
+  expr <- parseExpr
+  pure (Lam arg expr)
 
 application :: Parser Expr
 application = App <$> abstraction <*> parseExpr
@@ -55,13 +61,7 @@ parseTerm =  (parens parseExpr <?> "expression")
          <|> (literalInt       <?> "number")
 
 parseExpr :: Parser Expr
-parseExpr = foldl1' App <$> parseTerm `sepBy1` space
+parseExpr = foldl1' App <$> (parseTerm <?> "term") `sepBy1` space
 
 readExpr :: String -> Either (ParseErrorBundle String Void) Expr
 readExpr = parse parseExpr "(input)"
-
-eval :: String -> IO ()
-eval expr =
-  case readExpr expr of
-    Right res -> putStrLn $ prettify res ++ "\n  -> " ++ show res
-    Left err -> putStr $ errorBundlePretty err

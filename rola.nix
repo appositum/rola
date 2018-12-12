@@ -1,13 +1,13 @@
-{ mkDerivation, base, hspec, megaparsec_7_0_4, stdenv }:
+{ mkDerivation, base, containers, hspec, megaparsec_7_0_4, stdenv }:
 mkDerivation {
   pname = "rola";
   version = "0.1.0.0";
   src = ./.;
   isLibrary = true;
   isExecutable = true;
-  libraryHaskellDepends = [ base megaparsec_7_0_4 ];
-  executableHaskellDepends = [ base megaparsec_7_0_4 ];
-  testHaskellDepends = [ base hspec megaparsec_7_0_4 ];
+  libraryHaskellDepends = [ base containers megaparsec_7_0_4 ];
+  executableHaskellDepends = [ base ];
+  testHaskellDepends = [ base containers hspec megaparsec_7_0_4 ];
   doHaddock = false;
   homepage = "https://github.com/appositum/rola#readme";
   license = stdenv.lib.licenses.asl20;

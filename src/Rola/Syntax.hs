@@ -1,5 +1,11 @@
-module Rola.Syntax where
+module Rola.Syntax
+  ( Env
+  , Expr(..)
+  , Lit(..)
+  , Name
+  ) where
 
+import Data.Map (Map)
 import Rola.Pretty
 
 data Lit = LInt Int
@@ -12,15 +18,19 @@ instance Pretty Lit where
   prettify (LBool False) = "false"
 
 type Name = String
+type Env = Map Name Expr
+--type Env = [(Name, Expr)]
 
 data Expr = Var Name
-          | Abs Expr Expr -- abstraction
-          | App Expr Expr -- application
+          | Lam Name Expr     -- λ abstraction
+          | Cls Name Expr Env -- closure
+          | App Expr Expr     -- application
           | Literal Lit
           deriving (Eq, Show)
 
 instance Pretty Expr where
   prettify (Var var) = var
-  prettify (Abs head body) = "(λ" ++ prettify head ++ "." ++ prettify body ++ ")"
-  prettify (App expr expr') = prettify expr ++ " " ++ prettify expr'
   prettify (Literal lit) = prettify lit
+  prettify (Lam head body) = "(λ" ++ head ++ "." ++ prettify body ++ ")"
+  prettify (Cls head body _) = "(λ" ++ head ++ "." ++ prettify body ++ ")"
+  prettify (App func expr) = "(" ++ prettify func ++ " " ++ prettify expr ++ ")"
