@@ -46,4 +46,4 @@ eval expr =
     Right res ->
       case reduce res of
         Left err -> putStrLn err
-        Right red -> putStrLn $ prettify red ++ "\n -> " ++ show red
+        Right red -> putStrLn (prettify red)
