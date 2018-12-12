@@ -8,12 +8,12 @@ fromRight (Right a) = a
 parse :: String -> Expr
 parse = fromRight . readExpr
 
-s = parse "λf.(λg.(λx.f x (g x)))"
-k = parse "λx.λy.x"
-i = parse "λx.x"
-y = parse "λf.((λx.f (x x)) (λx.f (x x)))"
+combS = parse "λf.(λg.(λx.f x (g x)))"
+combK = parse "λx.λy.x"
+combI = parse "λx.x"
+combY = parse "λf.((λx.f (x x)) (λx.f (x x)))"
 
-true = parse "λx.λy.x"
+true  = parse "λx.λy.x"
 false = parse "λx.λy.y"
 
 zero  = parse "λf.λx.x"
