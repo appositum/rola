@@ -1,4 +1,16 @@
-module Church where
+module Church
+  ( combS
+  , combK
+  , combI
+  , combY
+  , true
+  , false
+  , zero
+  , one
+  , two
+  , three
+  , four
+  ) where
 
 import Rola
 
