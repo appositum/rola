@@ -65,9 +65,3 @@ parseExpr = foldl1' App <$> parseTerm `sepBy1` space
 
 readExpr :: String -> Either (ParseErrorBundle String Void) Expr
 readExpr = parse parseExpr "(input)"
-
-eval :: String -> IO ()
-eval expr =
-  case readExpr expr of
-    Right res -> putStrLn $ prettify res ++ "\n  -> " ++ show res
-    Left err -> putStr $ errorBundlePretty err
