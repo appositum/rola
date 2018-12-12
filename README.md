@@ -5,7 +5,7 @@
 - Nix
 ```bash
 nix-build
-./run.sh
+./result/bin/rola-exe
 ```
 
 - Stack
