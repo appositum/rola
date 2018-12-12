@@ -1,3 +1,3 @@
 #!/bin/sh
 
-nix-shell --run "source ~/.bashrc; cabal v1-run exe:rola"
+nix-shell --run "cabal v1-run exe:rola"
