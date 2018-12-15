@@ -79,5 +79,5 @@ main = hspec $ do
     it "ifThenElse return functions" $ do
       let res = unwords [ifte, true, "(\\f.\\g.f) (\\v.\\w.w)"]
       let res' = unwords [ifte, false, "(\\f.\\g.f) (\\v.\\w.w)"]
-      reduceMaybe res `shouldBe` Just (Cls "f" (Lam "g" (Var "f")) M.empty)
-      reduceMaybe res' `shouldBe` Just (Cls "v" (Lam "w" (Var "w")) M.empty)
+      reduceMaybe res `shouldBe` Just (Cls "f" (Lam "g" (Var "f")) churchEncodings)
+      reduceMaybe res' `shouldBe` Just (Cls "v" (Lam "w" (Var "w")) churchEncodings)
