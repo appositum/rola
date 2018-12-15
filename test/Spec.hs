@@ -48,12 +48,12 @@ main = hspec $ do
 
   describe "Literals" $ do
     it "can parse bool literals" $ do
-      parse "true" `shouldBe` Just (Literal (LBool True))
-      parse "false" `shouldBe` Just (Literal (LBool False))
+      parse "True" `shouldBe` Just (Literal (LBool True))
+      parse "False" `shouldBe` Just (Literal (LBool False))
 
     it "can parse booleans inside functions" $ do
-      let res = parse "(\\x.\\y.false)"
-      let res' = parse "(\\v.\\w.true)"
+      let res = parse "(\\x.\\y.False)"
+      let res' = parse "(\\v.\\w.True)"
       let expec = Lam "x" (Lam "y" (Literal (LBool False)))
       let expec' = Lam "v" (Lam "w" (Literal (LBool True)))
       res `shouldBe` Just expec

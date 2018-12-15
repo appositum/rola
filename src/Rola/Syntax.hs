@@ -17,8 +17,8 @@ data Lit = LInt Int
 
 instance Pretty Lit where
   prettify (LInt i)      = show i
-  prettify (LBool True)  = "true"
-  prettify (LBool False) = "false"
+  prettify (LBool True)  = "True"
+  prettify (LBool False) = "False"
 
 data Expr = Var Name
           | Lam Name Expr     -- λ abstraction
