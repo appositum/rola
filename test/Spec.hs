@@ -1,9 +1,9 @@
 {-# LANGUAGE ViewPatterns #-}
 
-import qualified Data.Map as M
-import Rola
-import Test.Hspec
-import Text.Megaparsec (parseMaybe)
+import qualified Data.Map        as M
+import           Rola
+import           Test.Hspec
+import           Text.Megaparsec (parseMaybe)
 
 parse :: String -> Maybe Expr
 parse = parseMaybe parseExpr
@@ -74,10 +74,12 @@ main = hspec $ do
       let res = unwords [ifte, true, "3 5"]
       let res' = unwords [ifte, false, "3 5"]
       reduceMaybe res `shouldBe` Just (Literal (LInt 3))
-      reduceMaybe res'  `shouldBe` Just (Literal (LInt 5))
+      reduceMaybe res' `shouldBe` Just (Literal (LInt 5))
 
     it "ifThenElse return functions" $ do
       let res = unwords [ifte, true, "(\\f.\\g.f) (\\v.\\w.w)"]
       let res' = unwords [ifte, false, "(\\f.\\g.f) (\\v.\\w.w)"]
-      reduceMaybe res `shouldBe` Just (Cls "f" (Lam "g" (Var "f")) churchEncodings)
-      reduceMaybe res' `shouldBe` Just (Cls "v" (Lam "w" (Var "w")) churchEncodings)
+      reduceMaybe res `shouldBe`
+        Just (Cls "f" (Lam "g" (Var "f")) churchEncodings)
+      reduceMaybe res' `shouldBe`
+        Just (Cls "v" (Lam "w" (Var "w")) churchEncodings)
