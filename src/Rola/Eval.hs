@@ -1,8 +1,12 @@
 module Rola.Eval
-  ( eval
+  ( churchEncodings
+  , envLookup
+  , eval
   , reduce
+  , reduceInEnv
   ) where
 
+import Church (encodings)
 import qualified Data.Map as M
 import Rola.Parser
 import Rola.Pretty
@@ -20,24 +24,32 @@ envLookup env name =
     Just expr -> Right expr
     Nothing -> Left $ "Couldn't find variable " ++ quote name
 
-reduce :: Expr -> Either Error Expr
-reduce = reduceEnv M.empty
+reduceInEnv :: Env -> Expr -> Either Error Expr
+reduceInEnv env (Var var) = envLookup env var
+reduceInEnv env (Lam arg body) = Right $ Cls arg body env
+reduceInEnv env (App func expr) = do
+  app <- reduceInEnv env func
 
-reduceEnv :: Env -> Expr -> Either Error Expr
-reduceEnv env (Var var) = envLookup env var
-reduceEnv env (Lam arg body) = Right $ Cls arg body env
-reduceEnv env (App func expr) = do
-  app <- reduceEnv env func
   case app of
     Cls arg body closedEnv -> do
-      evaluated <- reduceEnv env expr
+      evaluated <- reduceInEnv env expr
       let env' = M.insert arg evaluated $ closedEnv `M.union` env
-      reduceEnv env' body
+      reduceInEnv env' body
 
     other -> Left $
       "Can't apply " ++ quote (prettify other)
       ++ " to " ++ quote (prettify expr)
-reduceEnv _ cls = Right cls
+
+reduceInEnv _ other = Right other
+
+churchEncodings :: Env
+churchEncodings =
+  let fromRight (Right a) = a
+      mapper = fromRight . reduceInEnv M.empty . fromRight . readExpr
+  in mapper <$> M.fromList encodings
+
+reduce :: Expr -> Either Error Expr
+reduce = reduceInEnv churchEncodings
 
 eval :: String -> IO ()
 eval expr =

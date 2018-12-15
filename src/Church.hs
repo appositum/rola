@@ -1,35 +1,15 @@
-module Church
-  ( combS
-  , combK
-  , combI
-  , combY
-  , true
-  , false
-  , zero
-  , one
-  , two
-  , three
-  , four
-  ) where
+module Church where
 
-import Rola
-
-fromRight :: Either e a -> a
-fromRight (Right a) = a
-
-parse :: String -> Expr
-parse = fromRight . readExpr
-
-combS = parse "λf.(λg.(λx.f x (g x)))"
-combK = parse "λx.λy.x"
-combI = parse "λx.x"
-combY = parse "λf.((λx.f (x x)) (λx.f (x x)))"
-
-true  = parse "λx.λy.x"
-false = parse "λx.λy.y"
-
-zero  = parse "λf.λx.x"
-one   = parse "λf.λx.f x"
-two   = parse "λf.λx.f (f x)"
-three = parse "λf.λx.f (f (f x))"
-four  = parse "λf.λx.f (f (f (f x)))"
+encodings :: [(String, String)]
+encodings =
+  [ ("S",     "λf.(λg.(λx.f x (g x)))")
+  , ("K",     "λx.λy.x")
+  , ("I",     "λx.x")
+  , ("Y",     "λf.((λx.f (x x)) (λx.f (x x)))")
+  , ("zero",  "λf.λx.x")
+  , ("one",   "λf.λx.f x")
+  , ("two",   "λf.λx.f (f x)")
+  , ("three", "λf.λx.f (f (f x))")
+  , ("four",  "λf.λx.f (f (f (f x)))")
+  , ("five",  "λf.λx.f (f (f (f (f x))))")
+  ]
