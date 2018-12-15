@@ -8,6 +8,9 @@ module Rola.Syntax
 import Data.Map (Map)
 import Rola.Pretty
 
+type Name = String
+type Env = Map Name Expr
+
 data Lit = LInt Int
          | LBool Bool
          deriving (Eq, Show)
@@ -16,10 +19,6 @@ instance Pretty Lit where
   prettify (LInt i) = show i
   prettify (LBool True) = "true"
   prettify (LBool False) = "false"
-
-type Name = String
-type Env = Map Name Expr
---type Env = [(Name, Expr)]
 
 data Expr = Var Name
           | Lam Name Expr     -- λ abstraction

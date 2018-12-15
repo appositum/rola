@@ -7,8 +7,8 @@ module Rola.Parser
 import Data.List (foldl1')
 import Data.Void (Void)
 
-import Rola.Pretty (prettify)
-import Rola.Syntax (Expr(..), Lit(..))
+import Rola.Pretty
+import Rola.Syntax
 
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -22,11 +22,8 @@ symbolic = between space space . char
 parens :: Parser a -> Parser a
 parens = between (symbolic '(') (symbolic ')')
 
-identifier :: Parser String
-identifier = do
-  x <- letterChar
-  xs <- many alphaNumChar
-  pure (x:xs)
+identifier :: Parser Name
+identifier = (:) <$> letterChar <*> many alphaNumChar
 
 literalInt :: Parser Expr
 literalInt = Literal <$> LInt <$> decimal
