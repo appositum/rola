@@ -5,8 +5,8 @@ module Rola.Syntax
   , Name
   ) where
 
-import Data.Map (Map)
-import Rola.Pretty
+import           Data.Map    (Map)
+import           Rola.Pretty
 
 type Name = String
 type Env = Map Name Expr
@@ -16,8 +16,8 @@ data Lit = LInt Int
          deriving (Eq, Show)
 
 instance Pretty Lit where
-  prettify (LInt i) = show i
-  prettify (LBool True) = "true"
+  prettify (LInt i)      = show i
+  prettify (LBool True)  = "true"
   prettify (LBool False) = "false"
 
 data Expr = Var Name

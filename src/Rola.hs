@@ -5,9 +5,9 @@ module Rola
   , module Rola.Syntax
   ) where
 
-import Rola.Eval
-import Rola.Parser
-import Rola.Pretty
-import Rola.Syntax
-import Text.Megaparsec
-import Text.Megaparsec.Char
+import           Rola.Eval
+import           Rola.Parser
+import           Rola.Pretty
+import           Rola.Syntax
+import           Text.Megaparsec
+import           Text.Megaparsec.Char
