@@ -14,8 +14,17 @@ import           Text.Megaparsec.Char.Lexer (decimal)
 
 type Parser = Parsec Void String
 
+surroundedBy :: Parser a -> Parser sur -> Parser a
+surroundedBy p sur = sur *> p <* sur
+
+tokenize :: Parser a -> Parser a
+tokenize = (`surroundedBy` space)
+
+tokenize1 :: Parser a -> Parser a
+tokenize1 = (`surroundedBy` space1)
+
 symbolic :: Char -> Parser Char
-symbolic = between space space . char
+symbolic = tokenize . char
 
 parens :: Parser a -> Parser a
 parens = between (symbolic '(') (symbolic ')')
