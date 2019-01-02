@@ -24,10 +24,10 @@ identifier :: Parser Name
 identifier = (:) <$> letterChar <*> many alphaNumChar <?> "identifier"
 
 literalInt :: Parser Expr
-literalInt = Literal <$> LInt <$> decimal
+literalInt = Lit <$> LInt <$> decimal
 
 literalBool :: Parser Expr
-literalBool = Literal . LBool . read <$> (string "True" <|> string "False")
+literalBool = Lit . LBool . read <$> (string "True" <|> string "False")
 
 variable :: Parser Expr
 variable = Var <$> identifier
