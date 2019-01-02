@@ -21,7 +21,7 @@ parens :: Parser a -> Parser a
 parens = between (symbolic '(') (symbolic ')')
 
 identifier :: Parser Name
-identifier = (:) <$> letterChar <*> many alphaNumChar
+identifier = (:) <$> letterChar <*> many alphaNumChar <?> "identifier"
 
 literalInt :: Parser Expr
 literalInt = Literal <$> LInt <$> decimal
