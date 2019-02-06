@@ -45,14 +45,14 @@ main = hspec $ do
 
   describe "Literals" $ do
     it "can parse bool literals" $ do
-      parse "True" `shouldBe` Just (Literal (LBool True))
-      parse "False" `shouldBe` Just (Literal (LBool False))
+      parse "True" `shouldBe` Just (Lit (LBool True))
+      parse "False" `shouldBe` Just (Lit (LBool False))
 
     it "can parse booleans inside functions" $ do
       let res = parse "(\\x.\\y.False)"
       let res' = parse "(\\v.\\w.True)"
-      let expec = Lam "x" (Lam "y" (Literal (LBool False)))
-      let expec' = Lam "v" (Lam "w" (Literal (LBool True)))
+      let expec = Lam "x" (Lam "y" (Lit (LBool False)))
+      let expec' = Lam "v" (Lam "w" (Lit (LBool True)))
       res `shouldBe` Just expec
       res' `shouldBe` Just expec'
 
@@ -62,7 +62,7 @@ main = hspec $ do
     let ifte = "(λcond.λt.λe. cond t e)"
 
     it "identity function" $ do
-      reduceMaybe "(\\x.x) 3" `shouldBe` Just (Literal (LInt 3))
+      reduceMaybe "(\\x.x) 3" `shouldBe` Just (Lit (LInt 3))
 
     it "fails on undefined variable" $ do
       reduceMaybe "(λx.y) 3" `shouldBe` Nothing
@@ -70,8 +70,8 @@ main = hspec $ do
     it "ifThenElse combinator" $ do
       let res = unwords [ifte, true, "3 5"]
       let res' = unwords [ifte, false, "3 5"]
-      reduceMaybe res `shouldBe` Just (Literal (LInt 3))
-      reduceMaybe res' `shouldBe` Just (Literal (LInt 5))
+      reduceMaybe res `shouldBe` Just (Lit (LInt 3))
+      reduceMaybe res' `shouldBe` Just (Lit (LInt 5))
 
     it "ifThenElse return functions" $ do
       let res = unwords [ifte, true, "(\\f.\\g.f) (\\v.\\w.w)"]
