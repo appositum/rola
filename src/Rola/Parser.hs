@@ -4,40 +4,39 @@ module Rola.Parser
   , Parser(..)
   ) where
 
-import Data.List (foldl1')
-import Data.Void (Void)
-
-import Rola.Pretty (prettify)
-import Rola.Syntax (Expr(..), Lit(..))
-
-import Text.Megaparsec
-import Text.Megaparsec.Char
-import Text.Megaparsec.Char.Lexer (decimal)
+import           Data.List                  (foldl1')
+import           Data.Void                  (Void)
+import           Rola.Pretty
+import           Rola.Syntax
+import           Text.Megaparsec
+import           Text.Megaparsec.Char
+import           Text.Megaparsec.Char.Lexer (decimal)
 
 type Parser = Parsec Void String
 
+surroundedBy :: Parser a -> Parser sur -> Parser a
+surroundedBy p sur = sur *> p <* sur
+
+tokenize :: Parser a -> Parser a
+tokenize = (`surroundedBy` space)
+
+tokenize1 :: Parser a -> Parser a
+tokenize1 = (`surroundedBy` space1)
+
 symbolic :: Char -> Parser Char
-symbolic = between space space . char
+symbolic = tokenize . char
 
 parens :: Parser a -> Parser a
 parens = between (symbolic '(') (symbolic ')')
 
-identifier :: Parser String
-identifier = do
-  x <- letterChar
-  xs <- many alphaNumChar
-  pure (x:xs)
+identifier :: Parser Name
+identifier = (:) <$> letterChar <*> many alphaNumChar <?> "identifier"
 
 literalInt :: Parser Expr
-literalInt = Literal <$> LInt <$> decimal
+literalInt = Lit <$> LInt <$> decimal
 
 literalBool :: Parser Expr
-literalBool = do
-  b <- string "true" <|> string "false"
-  pure $
-    case b of
-      "true"  -> Literal (LBool True)
-      "false" -> Literal (LBool False)
+literalBool = Lit . LBool . read <$> (string "True" <|> string "False")
 
 variable :: Parser Expr
 variable = Var <$> identifier

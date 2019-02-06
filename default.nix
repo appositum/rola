@@ -1,2 +1,2 @@
 let pkgs = import <nixpkgs> {};
-in pkgs.haskellPackages.callPackage ./rola.nix {}
+in pkgs.haskellPackages.callPackage ./shell.nix {}

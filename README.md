@@ -16,5 +16,6 @@ stack install && stack build && stack exec rola-exe
 
 - **Cabal** (might not work on GHC versions other than 8.4.x)
 ```bash
-cabal update && cabal new-run exe:rola
+cabal update
+cabal new-build && cabal new-exec rola-exe
 ```
