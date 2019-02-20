@@ -14,7 +14,7 @@ nix-build && ./result/bin/rola-exe
 stack install && stack build && stack exec rola-exe
 ```
 
-- **Cabal** (might not work on GHC versions other than 8.4.x)
+- **Cabal**
 ```bash
 cabal update
 cabal new-build && cabal new-exec rola-exe
