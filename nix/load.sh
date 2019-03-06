@@ -5,4 +5,4 @@ PROJ_NIX_PATH="$(dirname "$FILE_ABS_PATH")"
 
 cd $PROJ_NIX_PATH
 cd ../
-nix-shell --run "cabal --enable-nix v1-repl lib:rola"
+nix-shell -p 'haskellPackages.ghcWithPackages (pkgs: [ (pkgs.callPackage ./rola.nix {}) ])' --run ghci
