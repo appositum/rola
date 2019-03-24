@@ -16,6 +16,6 @@ stack install && stack build && stack exec rola-exe
 
 - **Cabal**
 ```bash
-cabal update
+cabal new-update
 cabal new-build && cabal new-exec rola-exe
 ```
