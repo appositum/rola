@@ -1,5 +1,28 @@
-language: nix
-script: nix-build
+matrix:
+  include:
+    - language: nix
+      name: "Nix"
+      script: nix-build
+
+    - language: haskell
+      name: "Cabal GHC 7.10.3"
+      ghc: "7.10.3"
+
+    - language: haskell
+      name: "Cabal GHC 8.0.2"
+      ghc: "8.0.2"
+
+    - language: haskell
+      name: "Cabal GHC 8.2.2"
+      ghc: "8.2.2"
+
+    - language: haskell
+      name: "Cabal GHC 8.4.4"
+      ghc: "8.4.4"
+
+    - language: haskell
+      name: "Cabal GHC 8.6.3"
+      ghc: "8.6.3"
 
 notifications:
   email: false

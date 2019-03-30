@@ -1,12 +1,11 @@
 module Rola.Parser
   ( parseExpr
   , readExpr
-  , Parser(..)
+  , Parser
   ) where
 
 import           Data.List                  (foldl1')
 import           Data.Void                  (Void)
-import           Rola.Pretty
 import           Rola.Syntax
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
@@ -19,9 +18,6 @@ surroundedBy p sur = sur *> p <* sur
 
 tokenize :: Parser a -> Parser a
 tokenize = (`surroundedBy` space)
-
-tokenize1 :: Parser a -> Parser a
-tokenize1 = (`surroundedBy` space1)
 
 symbolic :: Char -> Parser Char
 symbolic = tokenize . char
@@ -48,9 +44,6 @@ abstraction = do
   symbolic '.'
   expr <- parseExpr
   pure (Lam arg expr)
-
-application :: Parser Expr
-application = App <$> abstraction <*> parseExpr
 
 parseTerm :: Parser Expr
 parseTerm =  (parens parseExpr <?> "expression")
