@@ -30,6 +30,6 @@ data Expr = Var Name
 instance Pretty Expr where
   prettify (Var var) = var
   prettify (Lit lit) = prettify lit
-  prettify (Lam head body) = "(λ" ++ head ++ "." ++ prettify body ++ ")"
-  prettify (Cls head body _) = "(λ" ++ head ++ "." ++ prettify body ++ ")"
+  prettify (Lam arg body) = "(λ" ++ arg ++ "." ++ prettify body ++ ")"
+  prettify (Cls arg body _) = "(λ" ++ arg ++ "." ++ prettify body ++ ")"
   prettify (App func expr) = "(" ++ prettify func ++ " " ++ prettify expr ++ ")"
