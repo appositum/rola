@@ -20,9 +20,6 @@ surroundedBy p sur = sur *> p <* sur
 tokenize :: Parser a -> Parser a
 tokenize = (`surroundedBy` space)
 
-tokenize1 :: Parser a -> Parser a
-tokenize1 = (`surroundedBy` space1)
-
 symbolic :: Char -> Parser Char
 symbolic = tokenize . char
 
