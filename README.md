@@ -6,7 +6,7 @@
 ### A few ways to build this
 - **Nix**
 ```bash
-nix-build && nix run rola-exe
+nix run -c rola-exe
 ```
 
 - **Stack**
