@@ -1,2 +1,2 @@
 import Rola
-:set prompt "\033[0;34mλ"
+:set prompt "λ> "
