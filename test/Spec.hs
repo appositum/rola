@@ -1,4 +1,4 @@
-{-# LANGUAGE ViewPatterns #-}
+{-# language ViewPatterns #-}
 
 import qualified Data.Map        as M
 import           Rola
