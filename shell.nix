@@ -9,6 +9,6 @@ stdenv.mkDerivation rec {
     env
   ];
   shellHook = ''
-  ghci
+  ghci && exit
   '';
 }
