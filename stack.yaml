@@ -42,7 +42,7 @@ packages:
 # extra-deps: []
 
 nix:
-  enable: true
+  enable: false
   shell-file: shell.nix
 
 # Override default flag values for local packages and extra-deps
