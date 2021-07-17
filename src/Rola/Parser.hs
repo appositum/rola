@@ -39,9 +39,9 @@ variable = Var <$> identifier
 
 abstraction :: Parser Expr
 abstraction = do
-  symbolic 'λ' <|> symbolic '\\'
+  _ <- symbolic 'λ' <|> symbolic '\\'
   arg <- identifier
-  symbolic '.'
+  _ <- symbolic '.'
   expr <- parseExpr
   pure (Lam arg expr)
 
