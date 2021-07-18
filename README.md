@@ -11,14 +11,12 @@ nix run -c rola-exe
 
 - **Stack**
 ```bash
-stack install
 stack build
-stack exec rola-exe
+stack run
 ```
 
 - **Cabal**
 ```bash
-cabal new-update
-cabal new-build
-cabal new-exec rola-exe
+cabal build
+cabal run rola-exe
 ```
