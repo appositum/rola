@@ -17,7 +17,7 @@ instance Pretty Lit where
 type Name = String
 
 data Expr = Var Name
-          | Lam Name Expr -- abstraction
+          | Lambda Expr Expr -- abstraction
           | App Expr Expr -- application
           | Literal Lit
           deriving (Eq, Show)
@@ -25,5 +25,5 @@ data Expr = Var Name
 instance Pretty Expr where
   prettify (Var var) = var
   prettify (Literal lit) = prettify lit
-  prettify (Lam head body) = "(λ" ++ head ++ "." ++ prettify body ++ ")"
-  prettify (App func expr) =  "(" ++ prettify func ++ " " ++ prettify expr ++ ")"
+  prettify (Lambda head body) = "(λ" ++ prettify head ++ "." ++ prettify body ++ ")"
+  prettify (App func expr) = "(" ++ prettify func ++ " " ++ prettify expr ++ ")"

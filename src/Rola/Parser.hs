@@ -47,8 +47,8 @@ abstraction = do
   symbolic 'λ' <|> symbolic '\\'
   arg <- identifier
   symbolic '.'
-  expr <- parseExpr
-  pure (Lam arg expr)
+  body <- parseExpr
+  pure (Lambda head body)
 
 application :: Parser Expr
 application = App <$> abstraction <*> parseExpr
