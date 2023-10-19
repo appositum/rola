@@ -27,12 +27,7 @@ literalInt :: Parser Expr
 literalInt = Literal <$> LInt <$> decimal
 
 literalBool :: Parser Expr
-literalBool = do
-  b <- string "true" <|> string "false"
-  pure $
-    case b of
-      "true"  -> Literal (LBool True)
-      "false" -> Literal (LBool False)
+literalBool = Literal . LBool . read <$> (string "True" <|> string "False")
 
 variable :: Parser Expr
 variable = Var <$> identifier
@@ -43,7 +38,7 @@ abstraction = do
   arg <- identifier
   symbolic '.'
   body <- parseExpr
-  pure (Lambda head body)
+  pure (Lam head body)
 
 application :: Parser Expr
 application = App <$> abstraction <*> parseExpr
