@@ -43,7 +43,7 @@ abstraction = do
   arg <- identifier
   symbolic '.'
   body <- parseExpr
-  pure (Lam head body)
+  pure (Lam arg body)
 
 parseTerm :: Parser Expr
 parseTerm =  (parens parseExpr <?> "expression")
